@@ -6,7 +6,11 @@ const {
   handleRegisterUser,
   handleVerifyOtp,
   handleUserLogin,
+  handleUserLogout,
+  handleGetUserProfile,
 } = require("../controllers/user.controller");
+const { checkForUserAuthentication } = require("../middlewares/user.auth");
+const { handleNearbyCaptains } = require("../controllers/ride.controller");
 
 router.post(
   "/register",
@@ -34,9 +38,9 @@ router.post(
   ],
   handleUserLogin
 );
+router.get("/profile", checkForUserAuthentication, handleGetUserProfile);
+router.post("/logout", checkForUserAuthentication, handleUserLogout);
 
-router.post("/logout", (req, res) => {
-  res.clearCookie("uid"); // Clear the JWT token cookie
-  res.status(200).json({ message: "Logout successful" });
-});
+router.post("/updatelocation", handleNearbyCaptains);
+
 module.exports = router;

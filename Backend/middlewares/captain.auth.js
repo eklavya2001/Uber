@@ -1,24 +1,22 @@
-const userModel = require("../models/user.model");
+const captainModel = require("../models/captain.model");
 const blackListTokenModel = require("../models/blacklistToken.model");
 const jwt = require("jsonwebtoken");
-async function checkForUserAuthentication(req, res, next) {
+async function checkForCaptainAuthentication(req, res, next) {
   try {
-    // console.log(req);
-
-    const tokenCookie = req.cookies.uid;
+    const tokenCookie = req.cookies.cap_uid;
     if (!tokenCookie) {
       return res.status(401).json({ msg: "token not found" });
     }
     const isBlacklisted = await blackListTokenModel.findOne({
       token: tokenCookie,
     });
+
     if (isBlacklisted) {
       return res.status(401).json({ message: "Unauthorized" });
     }
     const decoded = jwt.verify(tokenCookie, process.env.JWT_SECRET);
-    const user = await userModel.findById(decoded._id);
-
-    req.user = user;
+    const captain = await captainModel.findById(decoded._id);
+    req.captain = captain;
     // res.status(200).json({ msg: "succesfully logged in " });
     next();
   } catch (error) {
@@ -28,5 +26,5 @@ async function checkForUserAuthentication(req, res, next) {
 }
 
 module.exports = {
-  checkForUserAuthentication,
+  checkForCaptainAuthentication,
 };

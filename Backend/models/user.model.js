@@ -20,46 +20,52 @@ const transporter = nodemailer.createTransport({
 });
 
 //USER SCHEMA
-const userSchema = new mongoose.Schema({
-  fullname: {
-    firstname: {
+const userSchema = new mongoose.Schema(
+  {
+    fullname: {
+      firstname: {
+        type: String,
+        required: true,
+        minlength: [3, "First name must be at least 3 characters long"],
+      },
+      lastname: {
+        type: String,
+
+        minlength: [3, "Last name must be at least 3 characters long"],
+      },
+    },
+    email: {
       type: String,
       required: true,
-      minlength: [3, "First name must be at least 3 characters long"],
+      unique: true,
+      minlength: [5, "Email must be 5 characters long"],
     },
-    lastname: {
+    password: {
       type: String,
-
-      minlength: [3, "Last name must be at least 3 characters long"],
+      required: true,
+      select: false,
+    },
+    phone: {
+      type: String,
+      unique: true,
+    },
+    otp: {
+      type: String,
+      select: false,
+    },
+    otpExpires: {
+      type: Date,
+      select: false,
+    },
+    isVerified: {
+      type: Boolean,
+    },
+    socketId: {
+      type: String,
     },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    minlength: [5, "Email must be 5 characters long"],
-  },
-  password: {
-    type: String,
-    required: true,
-    select: false,
-  },
-  phone: {
-    type: String,
-    unique: true,
-  },
-  otp: {
-    type: String,
-    select: false,
-  },
-  otpExpires: {
-    type: Date,
-    select: false,
-  },
-  socketId: {
-    type: String,
-  },
-});
+  { timestamps: true }
+);
 
 userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET);
