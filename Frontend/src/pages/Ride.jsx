@@ -28,7 +28,7 @@ const Ride = () => {
     const [paymentCompleted, setPaymentCompleted] = useState(false)
 
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: `${import.meta.env.GOOGLE_MAPS_API_KEY}`, // Replace with your API key
+        googleMapsApiKey: `${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`, // Replace with your API key
         libraries,
     });
 
@@ -36,7 +36,7 @@ const Ride = () => {
 
     const navigate = useNavigate()
 
-    const apiKey = isTestMode ? `${import.meta.env.RAZORPAY_TEST_API_KEY}` : "rzp_live_YOUR_LIVE_KEY"; // Switch keys based on environment
+    const apiKey = isTestMode ? `${import.meta.env.VITE_RAZORPAY_TEST_API_KEY}` : "rzp_live_YOUR_LIVE_KEY"; // Switch keys based on environment
 
     useEffect(() => {
         const data = sessionStorage.getItem("data");

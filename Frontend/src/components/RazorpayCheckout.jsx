@@ -16,7 +16,7 @@ const RazorpayCheckout = ({
     useEffect(() => {
         if (!window.Razorpay) {
             const script = document.createElement("script");
-            script.src = `${import.meta.env.Razorpay_SCRIPT_URL}`;
+            script.src = `${import.meta.env.VITE_Razorpay_SCRIPT_URL}`;
             script.async = true;
             document.body.appendChild(script);
         }

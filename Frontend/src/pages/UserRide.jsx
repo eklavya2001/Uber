@@ -31,7 +31,7 @@ function UserRide() {
 
 
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: `${import.meta.env.GOOGLE_MAPS_API_KEY}`, // Replace with your API key
+        googleMapsApiKey: `${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`, // Replace with your API key
         libraries,
     });
     useEffect(() => {
