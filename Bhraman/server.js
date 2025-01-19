@@ -93,13 +93,13 @@ rideController.handleLiveLocation(io);
 rideController.handleCancelRideCaptain(io);
 rideController.handleCancelRideUser(io);
 
-server.use(express.static(path.join(__dirname, "./Frontend/dist")));
+app.use(express.static(path.join(__dirname, "./Frontend/dist")));
 
 // **6. React Routing Fallback**
-server.get("*", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./Frontend/dist", "index.html"));
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`server is running on PORT :  ${port}`);
 });
