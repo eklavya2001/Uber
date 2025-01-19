@@ -88,9 +88,8 @@ async function handleVerifyOtp(req, res) {
         msg: "Please enter your OTP! OTP is valid for 5 minutes only",
       });
     }
-    const _id = req.cookies.cap_id;
 
-    const captain = await captainModel.findOne({ _id: _id }).select("+otp");
+    const captain = await captainModel.findOne({ otp }).select("+otp");
     // const userOtp = user.otp;
     if (captain.otp == otp) {
       captain.otp = undefined;

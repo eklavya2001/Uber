@@ -53,8 +53,7 @@ async function handleRegisterUser(req, res) {
 
 async function handleVerifyOtp(req, res) {
   const { otp } = req.body;
-  console.log(otp);
-  console.log(req);
+
   try {
     if (!otp) {
       return res.status(400).json({
@@ -65,7 +64,7 @@ async function handleVerifyOtp(req, res) {
     console.log("gandu", _id);
 
     // console.log(_id);
-    const user = await userModel.findOne({ _id: _id }).select("+otp");
+    const user = await userModel.findOne({ otp }).select("+otp");
     console.log(user);
     console.log(user.otp);
     // const userOtp = user.otp;
