@@ -23,15 +23,6 @@ app.use(
     credentials: true, // Required for cookies/sessions
   })
 );
-app.use(cookieParser());
-const path = require("path");
-
-app.use(express.static(path.join(__dirname, "./Frontend/dist")));
-
-// **6. React Routing Fallback**
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./Frontend/dist", "index.html"));
-});
 
 // io.on("connection", (socket) => {
 //   console.log(`A user connected : ${socket.id}`);
@@ -43,7 +34,7 @@ app.get("*", (req, res) => {
 connectToDb();
 
 app.use(express.json());
-
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false })); // Parse URL-encoded bodies
 
 app.get("/", (req, res) => {
@@ -53,4 +44,12 @@ app.use("/user", userRouter);
 app.use("/captain", captainRouter);
 app.use("/api", paymentRouter);
 
+const path = require("path");
+
+app.use(express.static(path.join(__dirname, "./Frontend/dist")));
+
+// **6. React Routing Fallback**
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./Frontend/dist", "index.html"));
+});
 module.exports = app;
