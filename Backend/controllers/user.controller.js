@@ -34,7 +34,7 @@ async function handleRegisterUser(req, res) {
     await newUser.sendEmailOtp(otpGenerated);
     await newUser.sendSmsOtp(otpGenerated);
 
-    res.cookie("_id", newUser._id, {
+    res.cookie("_id", newUser._id.toString(), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Secure flag for HTTPS
       sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
@@ -94,28 +94,34 @@ async function handleUserLogin(req, res) {
     const user = await userModel.findOne({ email }).select("+password");
     // console.log(user);
     // const hashedPassword = user.password
-    const passCheck = await user.comparePassword(password);
-    console.log(passCheck);
+    if (user.isVerified) {
+      const passCheck = await user.comparePassword(password);
+      console.log(passCheck);
 
-    if (passCheck) {
-      const token = await user.generateAuthToken();
-      console.log(token);
+      if (passCheck) {
+        const token = await user.generateAuthToken();
+        console.log(token);
 
-      res.cookie("uid", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Secure flag for HTTPS
-        sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-      });
-      // req.userId = user._id;
-      return res.status(200).json({
-        success: true,
-        msg: "Logged in Successfully",
-        payload: user,
-      });
+        res.cookie("uid", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production", // Secure flag for HTTPS
+          sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+        });
+        // req.userId = user._id;
+        return res.status(200).json({
+          success: true,
+          msg: "Logged in Successfully",
+          payload: user,
+        });
+      } else {
+        return res
+          .status(400)
+          .json({ success: false, msg: "Wrong user credentials" });
+      }
     } else {
       return res
         .status(400)
-        .json({ success: false, msg: "Wrong user credentials" });
+        .json({ success: false, msg: "user not registered" });
     }
   } catch (error) {
     console.log("error", error);
@@ -124,8 +130,6 @@ async function handleUserLogin(req, res) {
       .json({ success: false, msg: "error generating auth token" });
   }
 }
-
-async function handleOtp() {}
 
 async function handleUserLogout(req, res) {
   const token = req.cookies.uid;

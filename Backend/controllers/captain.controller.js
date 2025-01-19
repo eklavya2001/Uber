@@ -63,7 +63,7 @@ async function handleRegisterCaptain(req, res) {
     const generatedOtp = await newUser.generateOtp();
     await newUser.sendEmailOtp(generatedOtp);
     await newUser.sendSmsOtp(generatedOtp);
-    res.cookie("cap_id", newUser._id, {
+    res.cookie("cap_id", newUser._id.toString(), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Secure flag for HTTPS
       sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
@@ -89,7 +89,8 @@ async function handleVerifyOtp(req, res) {
       });
     }
     const _id = req.cookies.cap_id;
-    const captain = await captainModel.findOne({ _id }).select("+otp");
+
+    const captain = await captainModel.findOne({ _id: _id }).select("+otp");
     // const userOtp = user.otp;
     if (captain.otp == otp) {
       captain.otp = undefined;
@@ -154,28 +155,34 @@ async function handleCaptainLogin(req, res) {
     }
     // console.log(captain);
     // const hashedPassword = user.password
-    const passCheck = await captain.comparePassword(password);
-    console.log(passCheck);
+    if (captain.isVerified) {
+      const passCheck = await captain.comparePassword(password);
+      console.log(passCheck);
 
-    if (passCheck) {
-      const token = await captain.generateAuthToken();
-      res.cookie("cap_uid", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Secure flag for HTTPS
-        sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-      });
+      if (passCheck) {
+        const token = await captain.generateAuthToken();
+        res.cookie("cap_uid", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production", // Secure flag for HTTPS
+          sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+        });
 
-      await captain.save();
-      return res.status(200).json({
-        success: true,
-        msg: "Auth token generated",
-        payload: captain,
-        isAuthenticated: true,
-      });
+        await captain.save();
+        return res.status(200).json({
+          success: true,
+          msg: "Auth token generated",
+          payload: captain,
+          isAuthenticated: true,
+        });
+      } else {
+        return res
+          .status(400)
+          .json({ success: false, msg: "Wrong user credentials" });
+      }
     } else {
       return res
         .status(400)
-        .json({ success: false, msg: "Wrong user credentials" });
+        .json({ success: false, msg: "captain not registered" });
     }
   } catch (error) {
     console.log("error", error);
