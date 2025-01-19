@@ -27,11 +27,11 @@ app.use(
 const path = require("path");
 
 // Serve React's build files
-app.use(express.static(path.join(__dirname, "frontend", "dist"))); // Adjust path if necessary
+app.use(express.static(path.join(__dirname, "../Frontend/dist")));
 
-// Fallback to index.html for React routes
+// Handle React routing by serving index.html for any unknown routes
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
 });
 
 // io.on("connection", (socket) => {
