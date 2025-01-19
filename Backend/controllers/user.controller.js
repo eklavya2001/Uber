@@ -52,20 +52,21 @@ async function handleRegisterUser(req, res) {
 }
 
 async function handleVerifyOtp(req, res) {
+  const { otp } = req.body;
+  console.log(otp);
+  console.log(req);
   try {
-    const { otp } = req.body;
-    console.log(otp);
-
     if (!otp) {
       return res.status(400).json({
         msg: "Please enter your OTP! OTP is valid for 5 minutes only",
       });
     }
     const _id = req.cookies._id;
+    console.log("gandu", _id);
 
-    console.log(_id);
+    // console.log(_id);
     const user = await userModel.findOne({ _id: _id }).select("+otp");
-    // console.log(user);
+    console.log(user);
     console.log(user.otp);
     // const userOtp = user.otp;
     if (user.otp == otp) {

@@ -23,7 +23,7 @@ app.use(
     credentials: true, // Required for cookies/sessions
   })
 );
-
+app.use(cookieParser());
 const path = require("path");
 
 app.use(express.static(path.join(__dirname, "../Frontend/dist")));
@@ -43,7 +43,7 @@ app.get("*", (req, res) => {
 connectToDb();
 
 app.use(express.json());
-app.use(cookieParser());
+
 app.use(express.urlencoded({ extended: false })); // Parse URL-encoded bodies
 
 app.get("/", (req, res) => {
