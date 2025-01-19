@@ -26,12 +26,11 @@ app.use(
 
 const path = require("path");
 
-// Serve React's build files
 app.use(express.static(path.join(__dirname, "../Frontend/dist")));
 
-// Handle React routing by serving index.html for any unknown routes
+// **6. React Routing Fallback**
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../Frontend/dist", "index.html"));
 });
 
 // io.on("connection", (socket) => {
@@ -45,6 +44,7 @@ connectToDb();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: false })); // Parse URL-encoded bodies
 
 app.get("/", (req, res) => {
   res.send("Hello world");
