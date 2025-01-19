@@ -9,6 +9,7 @@ const userRouter = require("./routes/user.routes");
 const captainRouter = require("./routes/captain.routes");
 const paymentRouter = require("./routes/payment");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 // const io = new Server(server, {
 //   cors: {
 //     origin: "http://localhost:5173",
@@ -37,14 +38,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false })); // Parse URL-encoded bodies
 
-app.get("/", (req, res) => {
-  res.send("Hello world");
-});
 app.use("/user", userRouter);
 app.use("/captain", captainRouter);
 app.use("/api", paymentRouter);
-
-const path = require("path");
 
 app.use(express.static(path.join(__dirname, "./Frontend/dist")));
 
