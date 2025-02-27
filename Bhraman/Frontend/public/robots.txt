@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bhraman-go.onrender.com/sitemap.xml
